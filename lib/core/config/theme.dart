@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Couleurs primaires personnalisables
-  static const Color primaryLight = Color(0xFF6750A4);
-  static const Color primaryDark = Color(0xFFD0BCFF);
+  // Couleurs primaires - Thème eau/pluie (Cyan)
+  static const Color primaryCyan = Color(0xFF00BCD4); // Cyan principal
+  static const Color primaryLight = Color(0xFF62EFFF); // Cyan clair
+  static const Color primaryDark = Color(0xFF008BA3); // Cyan foncé
 
   // Thème Light Material 3
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
-    colorScheme: ColorScheme.fromSeed(seedColor: primaryLight),
+    colorScheme: ColorScheme.fromSeed(seedColor: primaryCyan),
     appBarTheme: const AppBarTheme(centerTitle: true, elevation: 0),
     cardTheme: CardThemeData(
       elevation: 2,
@@ -29,7 +30,7 @@ class AppTheme {
     useMaterial3: true,
     brightness: Brightness.dark,
     colorScheme: ColorScheme.fromSeed(
-      seedColor: primaryDark,
+      seedColor: primaryCyan,
       brightness: Brightness.dark,
     ),
     appBarTheme: const AppBarTheme(centerTitle: true, elevation: 0),

@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'core/config/theme.dart';
 import 'core/config/constants.dart';
 import 'core/router/app_router.dart';
-import 'features/home/providers/theme_provider.dart';
+import 'features/profile/providers/theme_provider.dart';
 
-void main() {
+// Créons un Provider simple pour stocker l'état initial
+final onboardingSeenProvider = StateProvider<bool>((ref) => false);
+
+Future<void> main() async {
+  // 1. On s'assure que le moteur Flutter est prêt
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 2. On charge les préférences AVANT de lancer l'app
+  final prefs = await SharedPreferences.getInstance();
+  final hasSeen = prefs.getBool(AppConstants.keyOnboardingSeen) ?? false;
+
   runApp(
-    const ProviderScope(
-      child: MainApp(),
+    ProviderScope(
+      // 3. On injecte la valeur initiale dans Riverpod
+      overrides: [onboardingSeenProvider.overrideWith((ref) => hasSeen)],
+      child: const MainApp(),
     ),
   );
 }
@@ -19,20 +31,18 @@ class MainApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.watch(routerProvider);
     final themeMode = ref.watch(themeModeProvider);
+    // On récupère le router configuré (voir étape 2 ci-dessous)
+    final router = ref.watch(routerProvider);
 
+    // 4. On retourne UNIQUEMENT MaterialApp.router
     return MaterialApp.router(
       title: AppConstants.appName,
       debugShowCheckedModeBanner: false,
-
-      // Thèmes Material 3
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
-
-      // Navigation avec go_router
-      routerConfig: router,
+      routerConfig: router, // Tout passe par ici !
     );
   }
 }

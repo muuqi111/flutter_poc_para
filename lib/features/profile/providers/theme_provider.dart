@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// Provider pour gérer le thème (light/dark mode)
+/// Provider pour gérer le thème (light/dark mode)
 class ThemeModeNotifier extends StateNotifier<ThemeMode> {
   ThemeModeNotifier() : super(ThemeMode.system);
 
