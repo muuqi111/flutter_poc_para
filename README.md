@@ -51,6 +51,8 @@ Le fichier `.aab` sera dans `build/app/outputs/bundle/release/`
 
 ---
 
+#### Option 1 : testée et recommandée
+
 ### iOS
 
 #### Prerequis
@@ -118,45 +120,4 @@ flutter devices
 
 # Nettoyer le projet
 flutter clean && flutter pub get
-```
-
----
-
-## Tarification
-
-- **0.20 EUR/heure** (minimum 1h des l'activation)
-- **Maximum 100 heures** de location
-- **Penalite de 35 EUR** apres 100 heures
-
----
-
-## Fonctionnalites
-
-- Carte interactive des bornes de location
-- Scanner QR pour louer/restituer un parapluie
-- Suivi en temps reel de la location
-- Historique des locations
-- Mode sombre/clair
-- Notifications d'alerte (80h, 95h)
-
----
-
-## Technologies
-
-- Flutter 3.24+
-- Riverpod (state management)
-- go_router (navigation)
-- Freezed (models)
-- Google Maps Flutter
-- Material Design 3
-
----
-
-## Structure du projet
-
-```
-lib/
-├── core/           # Config, theme, router, widgets communs
-├── data/           # Models et donnees mockees
-└── features/       # Fonctionnalites (map, rental, profile...)
 ```
