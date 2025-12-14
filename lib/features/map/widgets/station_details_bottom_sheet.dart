@@ -21,11 +21,12 @@ class StationDetailsBottomSheet extends ConsumerWidget {
     final availableUmbrellas = station.umbrellas
         .where((u) => u.status == UmbrellaStatus.available)
         .toList();
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return DraggableScrollableSheet(
-      initialChildSize: 0.6,
+      initialChildSize: 0.65,
       minChildSize: 0.4,
-      maxChildSize: 0.9,
+      maxChildSize: 0.95,
       expand: false,
       builder: (context, scrollController) {
         return Container(
@@ -33,257 +34,273 @@ class StationDetailsBottomSheet extends ConsumerWidget {
             color: Theme.of(context).scaffoldBackgroundColor,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           ),
-          child: Column(
-            children: [
-              // Handle bar
-              Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.symmetric(vertical: 12),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-
-              // Header avec titre clair
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: [
+              // Handle bar + Header (non-scrollable visuellement mais dans le scroll)
+              SliverToBoxAdapter(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
+                    // Handle bar
                     Container(
-                      padding: const EdgeInsets.all(12),
+                      width: 40,
+                      height: 4,
+                      margin: const EdgeInsets.symmetric(vertical: 12),
                       decoration: BoxDecoration(
-                        color: AppColors.cyan.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(2),
                       ),
-                      child: const Icon(Icons.location_on, color: AppColors.cyan, size: 24),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+
+                    // Header avec titre
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
                         children: [
-                          Text(
-                            station.name,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: AppColors.cyan.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Icon(Icons.location_on, color: AppColors.cyan, size: 22),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  station.name,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Text(
+                                  station.address,
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: 13,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
                             ),
                           ),
-                          Text(
-                            station.address,
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 14,
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: availableUmbrellas.isNotEmpty
+                                  ? AppColors.success.withValues(alpha: 0.1)
+                                  : Colors.red.withValues(alpha: 0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Text(
+                              '${availableUmbrellas.length}',
+                              style: TextStyle(
+                                color: availableUmbrellas.isNotEmpty
+                                    ? AppColors.success
+                                    : Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: availableUmbrellas.isNotEmpty
-                            ? AppColors.success.withValues(alpha: 0.1)
-                            : Colors.red.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Text(
-                        '${availableUmbrellas.length}',
-                        style: TextStyle(
-                          color: availableUmbrellas.isNotEmpty
-                              ? AppColors.success
-                              : Colors.red,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
 
-              // Distance
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: [
-                    Icon(Icons.directions_walk, size: 16, color: Colors.grey[600]),
-                    const SizedBox(width: 4),
-                    Text(
-                      'A 250m - 3 min a pied',
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
-              ),
+                    const SizedBox(height: 8),
 
-              const SizedBox(height: 8),
-
-              const Divider(),
-
-              // Stats rapides - SANS "En charge"
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _buildStatChip(
-                      icon: Icons.umbrella,
-                      label: 'Disponibles',
-                      value: '${availableUmbrellas.length}/${station.totalCapacity}',
-                      color: AppColors.success,
-                    ),
-                    _buildStatChip(
-                      icon: Icons.check_circle,
-                      label: 'Statut',
-                      value: station.status == StationStatus.online ? 'En ligne' : 'Hors ligne',
-                      color: station.status == StationStatus.online
-                          ? AppColors.success
-                          : Colors.red,
-                    ),
-                  ],
-                ),
-              ),
-
-              const Divider(),
-
-              // Tarification
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppColors.cyan.withValues(alpha: 0.1),
-                      Colors.blue.withValues(alpha: 0.05),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: AppColors.cyan.withValues(alpha: 0.3),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: AppColors.cyan.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(Icons.euro, color: AppColors.cyan, size: 20),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    // Distance
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
                         children: [
+                          Icon(Icons.directions_walk, size: 14, color: Colors.grey[600]),
+                          const SizedBox(width: 4),
                           Text(
-                            'Tarif location',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              color: Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black87,
+                            'A 250m - 3 min a pied',
+                            style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+                    const Divider(height: 1),
+
+                    // Stats compactes
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: _buildCompactStat(
+                              icon: Icons.umbrella,
+                              value: '${availableUmbrellas.length}/${station.totalCapacity}',
+                              label: 'Disponibles',
+                              color: AppColors.success,
                             ),
                           ),
+                          Container(
+                            width: 1,
+                            height: 40,
+                            color: Colors.grey[300],
+                          ),
+                          Expanded(
+                            child: _buildCompactStat(
+                              icon: Icons.check_circle,
+                              value: station.status == StationStatus.online ? 'En ligne' : 'Hors ligne',
+                              label: 'Statut',
+                              color: station.status == StationStatus.online
+                                  ? AppColors.success
+                                  : Colors.red,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const Divider(height: 1),
+
+                    // Tarification compacte
+                    Container(
+                      margin: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: AppColors.cyan.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: AppColors.cyan.withValues(alpha: 0.2),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.euro, color: AppColors.cyan, size: 18),
+                          const SizedBox(width: 8),
                           Text(
-                            '${AppConstants.hourlyRate.toStringAsFixed(2)} EUR/heure',
+                            'Tarif:',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            '${AppConstants.hourlyRate.toStringAsFixed(2)} EUR/h',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: AppColors.cyan,
+                            ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            'Max 100h',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey[500],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // Titre liste
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Parapluies disponibles',
+                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            '${availableUmbrellas.length} dispo',
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.grey[600],
+                              color: Colors.grey[500],
                             ),
                           ),
                         ],
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: AppColors.cyan,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        '${AppConstants.hourlyRate.toStringAsFixed(2)} EUR',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
 
-              const Divider(),
-
-              // Liste des parapluies disponibles
-              Expanded(
-                child: ListView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.all(16),
-                  children: [
-                    Text(
-                      'Parapluies disponibles',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+              // Liste des parapluies
+              if (availableUmbrellas.isEmpty)
+                SliverToBoxAdapter(
+                  child: _buildEmptyState(),
+                )
+              else
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return UmbrellaListItem(
+                          umbrella: availableUmbrellas[index],
+                          onSelect: () => _selectUmbrella(context, ref, availableUmbrellas[index]),
+                        );
+                      },
+                      childCount: availableUmbrellas.length,
                     ),
-                    const SizedBox(height: 12),
-                    if (availableUmbrellas.isEmpty)
-                      _buildEmptyState()
-                    else
-                      ...availableUmbrellas.map((umbrella) => UmbrellaListItem(
-                            umbrella: umbrella,
-                            onSelect: () => _selectUmbrella(context, ref, umbrella),
-                          )),
-                  ],
+                  ),
                 ),
-              ),
 
               // Boutons d'action
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton.icon(
-                        onPressed: availableUmbrellas.isNotEmpty
-                            ? () => _showUmbrellaSelection(context, ref)
-                            : null,
-                        icon: const Icon(Icons.qr_code_scanner),
-                        label: const Text('Choisir un parapluie'),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(16, 12, 16, 12 + bottomPadding),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: availableUmbrellas.isNotEmpty
+                              ? () => _selectUmbrella(context, ref, availableUmbrellas.first)
+                              : null,
+                          icon: const Icon(Icons.qr_code_scanner, size: 20),
+                          label: const Text('Louer un parapluie'),
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton.icon(
-                        onPressed: () {
-                          // TODO: Ouvrir Google Maps
-                        },
-                        icon: const Icon(Icons.directions),
-                        label: const Text('Itineraire'),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          onPressed: () {
+                            // TODO: Ouvrir Google Maps
+                          },
+                          icon: const Icon(Icons.directions, size: 20),
+                          label: const Text('Itineraire'),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -293,36 +310,36 @@ class StationDetailsBottomSheet extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatChip({
+  Widget _buildCompactStat({
     required IconData icon,
-    required String label,
     required String value,
+    required String label,
     required Color color,
   }) {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(icon, color: color, size: 24),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          value,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: color,
-          ),
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey[600],
-          ),
+        Icon(icon, color: color, size: 20),
+        const SizedBox(width: 8),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              value,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+                color: color,
+              ),
+            ),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11,
+                color: Colors.grey[600],
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -335,23 +352,23 @@ class StationDetailsBottomSheet extends ConsumerWidget {
         children: [
           Icon(
             Icons.umbrella_outlined,
-            size: 60,
+            size: 50,
             color: Colors.grey[300],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           Text(
             'Aucun parapluie disponible',
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 15,
               fontWeight: FontWeight.w600,
               color: Colors.grey[600],
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           Text(
             'Revenez plus tard ou essayez une autre borne',
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 13,
               color: Colors.grey[400],
             ),
             textAlign: TextAlign.center,
@@ -363,7 +380,6 @@ class StationDetailsBottomSheet extends ConsumerWidget {
 
   void _selectUmbrella(BuildContext context, WidgetRef ref, Umbrella umbrella) {
     Navigator.pop(context);
-    // Aller directement au scanner QR - pas de choix location/achat
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => QRScannerScreen(
@@ -373,16 +389,6 @@ class StationDetailsBottomSheet extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  void _showUmbrellaSelection(BuildContext context, WidgetRef ref) {
-    final availableUmbrellas = station.umbrellas
-        .where((u) => u.status == UmbrellaStatus.available)
-        .toList();
-
-    if (availableUmbrellas.isNotEmpty) {
-      _selectUmbrella(context, ref, availableUmbrellas.first);
-    }
   }
 }
 
