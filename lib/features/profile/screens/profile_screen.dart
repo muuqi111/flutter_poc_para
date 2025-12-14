@@ -21,7 +21,11 @@ class ProfileScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mon Profil'),
+        title: const Text(
+          'Mon profil',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(
@@ -32,7 +36,14 @@ class ProfileScreen extends ConsumerWidget {
             onPressed: () {
               ref.read(themeModeProvider.notifier).toggleTheme();
             },
-            tooltip: 'Changer le thème',
+            tooltip: 'Changer le theme',
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              // TODO: Naviguer vers parametres
+            },
+            tooltip: 'Parametres',
           ),
         ],
       ),
@@ -83,21 +94,6 @@ class ProfileScreen extends ConsumerWidget {
             ),
 
             const SizedBox(height: AppConstants.spacingLg),
-
-            // Solde
-            Card(
-              child: ListTile(
-                leading: const Icon(Icons.account_balance_wallet, size: 32),
-                title: const Text('Solde du compte'),
-                subtitle: Text(Formatters.formatPrice(user.balance)),
-                trailing: const Icon(Icons.add_circle_outline),
-                onTap: () {
-                  // TODO: Ajouter des fonds
-                },
-              ),
-            ),
-
-            const SizedBox(height: AppConstants.spacingMd),
 
             // Statistiques
             Row(

@@ -31,7 +31,15 @@ mixin _$Rental {
   DateTime get startTime => throw _privateConstructorUsedError;
   DateTime? get endTime => throw _privateConstructorUsedError;
   RentalStatus get status => throw _privateConstructorUsedError;
-  double get totalCost => throw _privateConstructorUsedError;
+  RentalType get type => throw _privateConstructorUsedError;
+  double get basePrice => throw _privateConstructorUsedError; // Prix de base
+  double? get extraCharges =>
+      throw _privateConstructorUsedError; // Frais supplémentaires
+  double get totalCost =>
+      throw _privateConstructorUsedError; // Coût total final
+  bool get isDamaged =>
+      throw _privateConstructorUsedError; // Signalé comme abîmé
+  String? get notes => throw _privateConstructorUsedError;
 
   /// Serializes this Rental to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -58,7 +66,12 @@ abstract class $RentalCopyWith<$Res> {
     DateTime startTime,
     DateTime? endTime,
     RentalStatus status,
+    RentalType type,
+    double basePrice,
+    double? extraCharges,
     double totalCost,
+    bool isDamaged,
+    String? notes,
   });
 }
 
@@ -87,7 +100,12 @@ class _$RentalCopyWithImpl<$Res, $Val extends Rental>
     Object? startTime = null,
     Object? endTime = freezed,
     Object? status = null,
+    Object? type = null,
+    Object? basePrice = null,
+    Object? extraCharges = freezed,
     Object? totalCost = null,
+    Object? isDamaged = null,
+    Object? notes = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -131,10 +149,30 @@ class _$RentalCopyWithImpl<$Res, $Val extends Rental>
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
                       as RentalStatus,
+            type: null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as RentalType,
+            basePrice: null == basePrice
+                ? _value.basePrice
+                : basePrice // ignore: cast_nullable_to_non_nullable
+                      as double,
+            extraCharges: freezed == extraCharges
+                ? _value.extraCharges
+                : extraCharges // ignore: cast_nullable_to_non_nullable
+                      as double?,
             totalCost: null == totalCost
                 ? _value.totalCost
                 : totalCost // ignore: cast_nullable_to_non_nullable
                       as double,
+            isDamaged: null == isDamaged
+                ? _value.isDamaged
+                : isDamaged // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            notes: freezed == notes
+                ? _value.notes
+                : notes // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -160,7 +198,12 @@ abstract class _$$RentalImplCopyWith<$Res> implements $RentalCopyWith<$Res> {
     DateTime startTime,
     DateTime? endTime,
     RentalStatus status,
+    RentalType type,
+    double basePrice,
+    double? extraCharges,
     double totalCost,
+    bool isDamaged,
+    String? notes,
   });
 }
 
@@ -188,7 +231,12 @@ class __$$RentalImplCopyWithImpl<$Res>
     Object? startTime = null,
     Object? endTime = freezed,
     Object? status = null,
+    Object? type = null,
+    Object? basePrice = null,
+    Object? extraCharges = freezed,
     Object? totalCost = null,
+    Object? isDamaged = null,
+    Object? notes = freezed,
   }) {
     return _then(
       _$RentalImpl(
@@ -232,10 +280,30 @@ class __$$RentalImplCopyWithImpl<$Res>
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
                   as RentalStatus,
+        type: null == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as RentalType,
+        basePrice: null == basePrice
+            ? _value.basePrice
+            : basePrice // ignore: cast_nullable_to_non_nullable
+                  as double,
+        extraCharges: freezed == extraCharges
+            ? _value.extraCharges
+            : extraCharges // ignore: cast_nullable_to_non_nullable
+                  as double?,
         totalCost: null == totalCost
             ? _value.totalCost
             : totalCost // ignore: cast_nullable_to_non_nullable
                   as double,
+        isDamaged: null == isDamaged
+            ? _value.isDamaged
+            : isDamaged // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        notes: freezed == notes
+            ? _value.notes
+            : notes // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -255,7 +323,12 @@ class _$RentalImpl implements _Rental {
     required this.startTime,
     this.endTime,
     this.status = RentalStatus.active,
+    this.type = RentalType.rental,
+    this.basePrice = 0.0,
+    this.extraCharges,
     this.totalCost = 0.0,
+    this.isDamaged = false,
+    this.notes,
   });
 
   factory _$RentalImpl.fromJson(Map<String, dynamic> json) =>
@@ -284,11 +357,28 @@ class _$RentalImpl implements _Rental {
   final RentalStatus status;
   @override
   @JsonKey()
+  final RentalType type;
+  @override
+  @JsonKey()
+  final double basePrice;
+  // Prix de base
+  @override
+  final double? extraCharges;
+  // Frais supplémentaires
+  @override
+  @JsonKey()
   final double totalCost;
+  // Coût total final
+  @override
+  @JsonKey()
+  final bool isDamaged;
+  // Signalé comme abîmé
+  @override
+  final String? notes;
 
   @override
   String toString() {
-    return 'Rental(id: $id, userId: $userId, umbrellaId: $umbrellaId, startStationId: $startStationId, startStationName: $startStationName, endStationId: $endStationId, endStationName: $endStationName, startTime: $startTime, endTime: $endTime, status: $status, totalCost: $totalCost)';
+    return 'Rental(id: $id, userId: $userId, umbrellaId: $umbrellaId, startStationId: $startStationId, startStationName: $startStationName, endStationId: $endStationId, endStationName: $endStationName, startTime: $startTime, endTime: $endTime, status: $status, type: $type, basePrice: $basePrice, extraCharges: $extraCharges, totalCost: $totalCost, isDamaged: $isDamaged, notes: $notes)';
   }
 
   @override
@@ -312,8 +402,16 @@ class _$RentalImpl implements _Rental {
                 other.startTime == startTime) &&
             (identical(other.endTime, endTime) || other.endTime == endTime) &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.basePrice, basePrice) ||
+                other.basePrice == basePrice) &&
+            (identical(other.extraCharges, extraCharges) ||
+                other.extraCharges == extraCharges) &&
             (identical(other.totalCost, totalCost) ||
-                other.totalCost == totalCost));
+                other.totalCost == totalCost) &&
+            (identical(other.isDamaged, isDamaged) ||
+                other.isDamaged == isDamaged) &&
+            (identical(other.notes, notes) || other.notes == notes));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -330,7 +428,12 @@ class _$RentalImpl implements _Rental {
     startTime,
     endTime,
     status,
+    type,
+    basePrice,
+    extraCharges,
     totalCost,
+    isDamaged,
+    notes,
   );
 
   /// Create a copy of Rental
@@ -359,7 +462,12 @@ abstract class _Rental implements Rental {
     required final DateTime startTime,
     final DateTime? endTime,
     final RentalStatus status,
+    final RentalType type,
+    final double basePrice,
+    final double? extraCharges,
     final double totalCost,
+    final bool isDamaged,
+    final String? notes,
   }) = _$RentalImpl;
 
   factory _Rental.fromJson(Map<String, dynamic> json) = _$RentalImpl.fromJson;
@@ -385,7 +493,17 @@ abstract class _Rental implements Rental {
   @override
   RentalStatus get status;
   @override
-  double get totalCost;
+  RentalType get type;
+  @override
+  double get basePrice; // Prix de base
+  @override
+  double? get extraCharges; // Frais supplémentaires
+  @override
+  double get totalCost; // Coût total final
+  @override
+  bool get isDamaged; // Signalé comme abîmé
+  @override
+  String? get notes;
 
   /// Create a copy of Rental
   /// with the given fields replaced by the non-null parameter values.

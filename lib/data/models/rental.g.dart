@@ -21,7 +21,14 @@ _$RentalImpl _$$RentalImplFromJson(Map<String, dynamic> json) => _$RentalImpl(
   status:
       $enumDecodeNullable(_$RentalStatusEnumMap, json['status']) ??
       RentalStatus.active,
+  type:
+      $enumDecodeNullable(_$RentalTypeEnumMap, json['type']) ??
+      RentalType.rental,
+  basePrice: (json['basePrice'] as num?)?.toDouble() ?? 0.0,
+  extraCharges: (json['extraCharges'] as num?)?.toDouble(),
   totalCost: (json['totalCost'] as num?)?.toDouble() ?? 0.0,
+  isDamaged: json['isDamaged'] as bool? ?? false,
+  notes: json['notes'] as String?,
 );
 
 Map<String, dynamic> _$$RentalImplToJson(_$RentalImpl instance) =>
@@ -36,11 +43,19 @@ Map<String, dynamic> _$$RentalImplToJson(_$RentalImpl instance) =>
       'startTime': instance.startTime.toIso8601String(),
       'endTime': instance.endTime?.toIso8601String(),
       'status': _$RentalStatusEnumMap[instance.status]!,
+      'type': _$RentalTypeEnumMap[instance.type]!,
+      'basePrice': instance.basePrice,
+      'extraCharges': instance.extraCharges,
       'totalCost': instance.totalCost,
+      'isDamaged': instance.isDamaged,
+      'notes': instance.notes,
     };
 
 const _$RentalStatusEnumMap = {
   RentalStatus.active: 'active',
   RentalStatus.completed: 'completed',
+  RentalStatus.late: 'late',
   RentalStatus.cancelled: 'cancelled',
 };
+
+const _$RentalTypeEnumMap = {RentalType.rental: 'rental'};

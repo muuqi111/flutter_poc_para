@@ -13,10 +13,14 @@ _$UmbrellaImpl _$$UmbrellaImplFromJson(Map<String, dynamic> json) =>
       status:
           $enumDecodeNullable(_$UmbrellaStatusEnumMap, json['status']) ??
           UmbrellaStatus.available,
+      color:
+          $enumDecodeNullable(_$UmbrellaColorEnumMap, json['color']) ??
+          UmbrellaColor.blue,
+      totalRentals: (json['totalRentals'] as num?)?.toInt() ?? 0,
       lastMaintenanceDate: json['lastMaintenanceDate'] == null
           ? null
           : DateTime.parse(json['lastMaintenanceDate'] as String),
-      batteryLevel: (json['batteryLevel'] as num?)?.toInt() ?? 100,
+      needsRepair: json['needsRepair'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$UmbrellaImplToJson(_$UmbrellaImpl instance) =>
@@ -24,13 +28,25 @@ Map<String, dynamic> _$$UmbrellaImplToJson(_$UmbrellaImpl instance) =>
       'id': instance.id,
       'stationId': instance.stationId,
       'status': _$UmbrellaStatusEnumMap[instance.status]!,
+      'color': _$UmbrellaColorEnumMap[instance.color]!,
+      'totalRentals': instance.totalRentals,
       'lastMaintenanceDate': instance.lastMaintenanceDate?.toIso8601String(),
-      'batteryLevel': instance.batteryLevel,
+      'needsRepair': instance.needsRepair,
     };
 
 const _$UmbrellaStatusEnumMap = {
   UmbrellaStatus.available: 'available',
-  UmbrellaStatus.rented: 'rented',
+  UmbrellaStatus.reserved: 'reserved',
+  UmbrellaStatus.inUse: 'inUse',
+  UmbrellaStatus.returning: 'returning',
+  UmbrellaStatus.maintenance: 'maintenance',
   UmbrellaStatus.broken: 'broken',
-  UmbrellaStatus.charging: 'charging',
+};
+
+const _$UmbrellaColorEnumMap = {
+  UmbrellaColor.blue: 'blue',
+  UmbrellaColor.red: 'red',
+  UmbrellaColor.green: 'green',
+  UmbrellaColor.black: 'black',
+  UmbrellaColor.yellow: 'yellow',
 };

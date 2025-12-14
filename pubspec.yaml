@@ -1,5 +1,5 @@
-name: umbrella_rental
-description: "Application de location de parapluies en libre-service - POC"
+name: rainy
+description: "Rainy - Application de location de parapluies en libre-service"
 publish_to: 'none'
 version: 0.1.0
 

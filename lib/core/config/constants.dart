@@ -1,6 +1,6 @@
 class AppConstants {
   // App Info
-  static const String appName = 'Parapluie';
+  static const String appName = 'Rainy';
   static const String appVersion = '1.0.0';
   static const String appDescription = 'Location de parapluies en libre-service';
 
@@ -35,13 +35,18 @@ class AppConstants {
   static const String historyRoute = '/history';
   static const String settingsRoute = '/settings';
 
-  // Tarification
-  static const double unlockFee = 0.50; // Frais de déverrouillage (€)
-  static const double ratePer15Min = 0.15; // Tarif par 15 minutes (€)
-  static const int billingIntervalMinutes = 15; // Intervalle de facturation (minutes)
-  static const double maxDailyCost = 5.00; // Plafond journalier (€)
-  static const double deposit = 10.00; // Caution (€)
-  static const int maxRentalHours = 24; // Durée maximale de location (heures)
+  // Tarification horaire
+  static const double hourlyRate = 0.20;             // 0,20EUR par heure
+  static const int maxRentalHours = 100;             // 100 heures max
+  static const double penaltyFee = 35.00;            // 35EUR de penalite apres 100h
+
+  // Seuils d'alerte
+  static const int warningThresholdHours = 80;       // Avertissement a 80h
+  static const int criticalThresholdHours = 95;      // Alerte critique a 95h
+
+  // Penalites
+  static const double damageFee = 5.00;              // 5EUR si parapluie abime
+  static const double lossFee = 15.00;               // 15EUR si perdu
 
   // Géolocalisation
   static const double proximityRadiusMeters = 50.0; // Rayon de proximité pour scanner QR (mètres)

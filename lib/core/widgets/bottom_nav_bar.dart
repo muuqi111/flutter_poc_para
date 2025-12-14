@@ -36,9 +36,9 @@ class CustomBottomNavBar extends StatelessWidget {
           label: 'Carte',
         ),
         NavigationDestination(
-          icon: Icon(Icons.umbrella_outlined),
-          selectedIcon: Icon(Icons.umbrella),
-          label: 'Locations',
+          icon: Icon(Icons.history_outlined),
+          selectedIcon: Icon(Icons.history),
+          label: 'Historique',
         ),
         NavigationDestination(
           icon: Icon(Icons.person_outline),

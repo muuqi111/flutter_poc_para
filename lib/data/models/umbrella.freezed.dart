@@ -24,8 +24,11 @@ mixin _$Umbrella {
   String get id => throw _privateConstructorUsedError;
   String get stationId => throw _privateConstructorUsedError;
   UmbrellaStatus get status => throw _privateConstructorUsedError;
+  UmbrellaColor get color => throw _privateConstructorUsedError;
+  int get totalRentals =>
+      throw _privateConstructorUsedError; // Nombre de locations effectuees
   DateTime? get lastMaintenanceDate => throw _privateConstructorUsedError;
-  int get batteryLevel => throw _privateConstructorUsedError;
+  bool get needsRepair => throw _privateConstructorUsedError;
 
   /// Serializes this Umbrella to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -46,8 +49,10 @@ abstract class $UmbrellaCopyWith<$Res> {
     String id,
     String stationId,
     UmbrellaStatus status,
+    UmbrellaColor color,
+    int totalRentals,
     DateTime? lastMaintenanceDate,
-    int batteryLevel,
+    bool needsRepair,
   });
 }
 
@@ -69,8 +74,10 @@ class _$UmbrellaCopyWithImpl<$Res, $Val extends Umbrella>
     Object? id = null,
     Object? stationId = null,
     Object? status = null,
+    Object? color = null,
+    Object? totalRentals = null,
     Object? lastMaintenanceDate = freezed,
-    Object? batteryLevel = null,
+    Object? needsRepair = null,
   }) {
     return _then(
       _value.copyWith(
@@ -86,14 +93,22 @@ class _$UmbrellaCopyWithImpl<$Res, $Val extends Umbrella>
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
                       as UmbrellaStatus,
+            color: null == color
+                ? _value.color
+                : color // ignore: cast_nullable_to_non_nullable
+                      as UmbrellaColor,
+            totalRentals: null == totalRentals
+                ? _value.totalRentals
+                : totalRentals // ignore: cast_nullable_to_non_nullable
+                      as int,
             lastMaintenanceDate: freezed == lastMaintenanceDate
                 ? _value.lastMaintenanceDate
                 : lastMaintenanceDate // ignore: cast_nullable_to_non_nullable
                       as DateTime?,
-            batteryLevel: null == batteryLevel
-                ? _value.batteryLevel
-                : batteryLevel // ignore: cast_nullable_to_non_nullable
-                      as int,
+            needsRepair: null == needsRepair
+                ? _value.needsRepair
+                : needsRepair // ignore: cast_nullable_to_non_nullable
+                      as bool,
           )
           as $Val,
     );
@@ -113,8 +128,10 @@ abstract class _$$UmbrellaImplCopyWith<$Res>
     String id,
     String stationId,
     UmbrellaStatus status,
+    UmbrellaColor color,
+    int totalRentals,
     DateTime? lastMaintenanceDate,
-    int batteryLevel,
+    bool needsRepair,
   });
 }
 
@@ -135,8 +152,10 @@ class __$$UmbrellaImplCopyWithImpl<$Res>
     Object? id = null,
     Object? stationId = null,
     Object? status = null,
+    Object? color = null,
+    Object? totalRentals = null,
     Object? lastMaintenanceDate = freezed,
-    Object? batteryLevel = null,
+    Object? needsRepair = null,
   }) {
     return _then(
       _$UmbrellaImpl(
@@ -152,14 +171,22 @@ class __$$UmbrellaImplCopyWithImpl<$Res>
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
                   as UmbrellaStatus,
+        color: null == color
+            ? _value.color
+            : color // ignore: cast_nullable_to_non_nullable
+                  as UmbrellaColor,
+        totalRentals: null == totalRentals
+            ? _value.totalRentals
+            : totalRentals // ignore: cast_nullable_to_non_nullable
+                  as int,
         lastMaintenanceDate: freezed == lastMaintenanceDate
             ? _value.lastMaintenanceDate
             : lastMaintenanceDate // ignore: cast_nullable_to_non_nullable
                   as DateTime?,
-        batteryLevel: null == batteryLevel
-            ? _value.batteryLevel
-            : batteryLevel // ignore: cast_nullable_to_non_nullable
-                  as int,
+        needsRepair: null == needsRepair
+            ? _value.needsRepair
+            : needsRepair // ignore: cast_nullable_to_non_nullable
+                  as bool,
       ),
     );
   }
@@ -172,8 +199,10 @@ class _$UmbrellaImpl implements _Umbrella {
     required this.id,
     required this.stationId,
     this.status = UmbrellaStatus.available,
+    this.color = UmbrellaColor.blue,
+    this.totalRentals = 0,
     this.lastMaintenanceDate,
-    this.batteryLevel = 100,
+    this.needsRepair = false,
   });
 
   factory _$UmbrellaImpl.fromJson(Map<String, dynamic> json) =>
@@ -187,14 +216,21 @@ class _$UmbrellaImpl implements _Umbrella {
   @JsonKey()
   final UmbrellaStatus status;
   @override
+  @JsonKey()
+  final UmbrellaColor color;
+  @override
+  @JsonKey()
+  final int totalRentals;
+  // Nombre de locations effectuees
+  @override
   final DateTime? lastMaintenanceDate;
   @override
   @JsonKey()
-  final int batteryLevel;
+  final bool needsRepair;
 
   @override
   String toString() {
-    return 'Umbrella(id: $id, stationId: $stationId, status: $status, lastMaintenanceDate: $lastMaintenanceDate, batteryLevel: $batteryLevel)';
+    return 'Umbrella(id: $id, stationId: $stationId, status: $status, color: $color, totalRentals: $totalRentals, lastMaintenanceDate: $lastMaintenanceDate, needsRepair: $needsRepair)';
   }
 
   @override
@@ -206,10 +242,13 @@ class _$UmbrellaImpl implements _Umbrella {
             (identical(other.stationId, stationId) ||
                 other.stationId == stationId) &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(other.color, color) || other.color == color) &&
+            (identical(other.totalRentals, totalRentals) ||
+                other.totalRentals == totalRentals) &&
             (identical(other.lastMaintenanceDate, lastMaintenanceDate) ||
                 other.lastMaintenanceDate == lastMaintenanceDate) &&
-            (identical(other.batteryLevel, batteryLevel) ||
-                other.batteryLevel == batteryLevel));
+            (identical(other.needsRepair, needsRepair) ||
+                other.needsRepair == needsRepair));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -219,8 +258,10 @@ class _$UmbrellaImpl implements _Umbrella {
     id,
     stationId,
     status,
+    color,
+    totalRentals,
     lastMaintenanceDate,
-    batteryLevel,
+    needsRepair,
   );
 
   /// Create a copy of Umbrella
@@ -242,8 +283,10 @@ abstract class _Umbrella implements Umbrella {
     required final String id,
     required final String stationId,
     final UmbrellaStatus status,
+    final UmbrellaColor color,
+    final int totalRentals,
     final DateTime? lastMaintenanceDate,
-    final int batteryLevel,
+    final bool needsRepair,
   }) = _$UmbrellaImpl;
 
   factory _Umbrella.fromJson(Map<String, dynamic> json) =
@@ -256,9 +299,13 @@ abstract class _Umbrella implements Umbrella {
   @override
   UmbrellaStatus get status;
   @override
+  UmbrellaColor get color;
+  @override
+  int get totalRentals; // Nombre de locations effectuees
+  @override
   DateTime? get lastMaintenanceDate;
   @override
-  int get batteryLevel;
+  bool get needsRepair;
 
   /// Create a copy of Umbrella
   /// with the given fields replaced by the non-null parameter values.

@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../../../core/config/constants.dart';
 import '../../../core/config/app_colors.dart';
 import '../providers/stations_provider.dart';
 import '../../../data/models/station.dart';
+import '../widgets/station_details_bottom_sheet.dart';
 
 class MapScreen extends ConsumerStatefulWidget {
   const MapScreen({super.key});
@@ -29,20 +29,46 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         ? allStations.where((s) => s.hasAvailableUmbrellas).toList()
         : allStations;
 
+    // Compter le nombre total de parapluies disponibles
+    final totalUmbrellas = stations.fold<int>(
+      0,
+      (sum, station) => sum + station.availableUmbrellasCount,
+    );
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Carte des bornes'),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Carte des bornes',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              '${stations.length} bornes - $totalUmbrellas parapluies disponibles',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
+                color: Theme.of(context).appBarTheme.foregroundColor?.withValues(alpha: 0.7),
+              ),
+            ),
+          ],
+        ),
+        centerTitle: false,
         actions: [
           IconButton(
             icon: Icon(
               _showOnlyAvailable ? Icons.filter_alt : Icons.filter_alt_outlined,
             ),
+            tooltip: 'Filtrer les bornes',
             onPressed: () {
               setState(() => _showOnlyAvailable = !_showOnlyAvailable);
             },
           ),
           IconButton(
             icon: Icon(_isMapView ? Icons.list : Icons.map),
+            tooltip: _isMapView ? 'Voir en liste' : 'Voir sur la carte',
             onPressed: () {
               setState(() => _isMapView = !_isMapView);
             },
@@ -222,89 +248,6 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   }
 
   void _showStationDetails(Station station) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.6,
-        minChildSize: 0.4,
-        maxChildSize: 0.9,
-        expand: false,
-        builder: (context, scrollController) {
-          return SingleChildScrollView(
-            controller: scrollController,
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.umbrella, size: 40, color: AppColors.cyan),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            station.name,
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          Text(
-                            station.statusText,
-                            style: TextStyle(
-                              color: station.status == StationStatus.online
-                                  ? AppColors.success
-                                  : AppColors.error,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Text(station.address),
-                const SizedBox(height: 24),
-                Text(
-                  'Disponibilité',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  '${station.availableUmbrellasCount} / ${station.totalCapacity} parapluies disponibles',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton.icon(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      // TODO: Navigation vers scan QR
-                    },
-                    icon: const Icon(Icons.qr_code_scanner),
-                    label: const Text('Scanner QR Code'),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton.icon(
-                    onPressed: () {
-                      // TODO: Ouvrir Google Maps
-                    },
-                    icon: const Icon(Icons.directions),
-                    label: const Text('Itinéraire'),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
+    showStationDetailsBottomSheet(context, station);
   }
 }
